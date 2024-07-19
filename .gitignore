@@ -1,0 +1,6 @@
+node_modules/
+nodemon.json
+webpack.config.js
+src/resources/scss/
+src/resources/js/
+request.http

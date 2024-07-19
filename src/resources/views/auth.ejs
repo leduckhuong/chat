@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Gửi Xe Thông Minh</title>
+    <link rel="shortcut icon" href="/logos/logo.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/reset.css">
+	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+	<%- include('header')%>
+    <div class="app">
+		<video class="video" autoplay muted loop>
+			<source src="/videos/sea10s.mp4" type="video/mp4">
+		</video>
+		<div class="container" id="container">
+			<div class="form__container sign__up">
+				<form action="/auth/register" method="post">
+					<h1>Create Account</h1>
+					<div class="social__icons">
+						<a href="#" class="icon" id="googleRegister"><i class="fa-brands fa-google"></i></a>
+						<a href="#" class="icon" id="facebookRegister"><i class="fa-brands fa-facebook"></i></a>
+						<a href="#" class="icon" id="githubRegister"><i class="fa-brands fa-github"></i></a>
+						<a href="#" class="icon" id="linkedinRegister"><i class="fa-brands fa-linkedin-in"></i></a>
+					</div>
+					<span>or use your email for registeration</span>
+					<input type="email" name="email" id="email" placeholder="test@gmail.com">
+					<input type="password" name="password" id="password" placeholder="Password">
+					<input type="password" placeholder="Password">
+					<button type="submit">Sign Up</button>
+				</form>
+			</div>
+			<div class="form__container sign__in">
+				<form action="/auth/login" method="post">
+					<h1>Sign In</h1>
+					<div class="social__icons">
+						<a href="#" class="icon" id="googleLogin"><i class="fa-brands fa-google"></i></a>
+						<a href="#" class="icon" id="facebookLogin"><i class="fa-brands fa-facebook"></i></a>
+						<a href="#" class="icon" id="githubLogin"><i class="fa-brands fa-github"></i></a>
+						<a href="#" class="icon" id="linkedinLogin"><i class="fa-brands fa-linkedin-in"></i></a>
+					</div>
+					<span>or use your email for registeration</span>
+					<input type="email" name="email" id="email" placeholder="test@gmail.com">
+					<input type="password" name="password" id="password" placeholder="Password">
+					<div class="forget">
+						<a href="#">Forget Your Password?</a>
+					</div>
+					<button type="submit">Sign In</button>
+				</form>
+			</div>
+			<div class="toggle__container">
+				<div class="toggle">
+					<div class="toggle__panel toggle__left">
+						<h1>Welcome Back!</h1>
+						<p>Enter your personal details to use all of site features</p>
+						<button class="hidden" id="login">Sign In</button>
+					</div>
+					<div class="toggle__panel toggle__right">
+						<h1>Hello, Friend!</h1>
+						<p>Register with your personal details to use all of site features</p>
+						<button class="hidden" id="register">Sign Up</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+		import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+		const firebaseConfig = {
+			apiKey: "AIzaSyD5NWeZUrk9odIEgH7o_ILnMto7YUJggdU",
+			authDomain: "chat-dev-app-fdc6f.firebaseapp.com",
+			projectId: "chat-dev-app-fdc6f",
+			storageBucket: "chat-dev-app-fdc6f.appspot.com",
+			messagingSenderId: "449581428539",
+			appId: "1:449581428539:web:0739c58e3917fe7f77d11e"
+		};
+		const app = initializeApp(firebaseConfig);
+		const auth = getAuth(app);
+		const provider = new GoogleAuthProvider();
+
+		document.addEventListener("DOMContentLoaded", () => {
+			const googleRegister = document.getElementById('googleRegister');
+			googleRegister.addEventListener('click', () => {
+				signInWithPopup(auth, provider)
+					.then((result) => {
+						const user = result.user;
+						const email = user.email;
+						const passw = "123456";
+						fetch('/register', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							}, 
+							body: JSON.stringify({email, passw})
+						})
+						.then(response => response.json())
+						.then(data => {
+							console.log("Đăng ký thành công:", data);
+						})
+						.catch(error => {
+							console.error("Lỗi đăng ký:", error);
+						});
+					})
+					.catch((error) => {
+						// Xử lý lỗi
+						console.error("Lỗi đăng nhập:", error);
+					});
+			});
+		});
+	</script>
+	<script defer src="/js/auth.min.js"></script>
+</body>
+</html>
