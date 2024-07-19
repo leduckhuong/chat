@@ -1,16 +1,27 @@
-// const { verify } = require('../middlewares/jwt.middleware');
-
 class Me {
-    index (req, res, next) {
+    index (req, res) {
         const act = req.signedCookies.act;
         if(!act) {
-            res.redirect('/');
+            res.redirect('/login');
         }
-        // const data = verify(act, process.env.ACCESSTOKEN_SECRET, next);
-        // res.render('me', {
-        //     data,
-        //     isMe: true
-        // })
+        axios.get(`${process.env.AUTH_SERVER}/data`, {
+            headers: {
+                'Authorization': `Bearer ${act}`
+            }
+        })
+        .then(response => {
+            const user = response.data; 
+            res.render('me', {
+                user
+            });
+        })
+        .catch(error => {
+            console.log('Error: ', error);
+            res.sendStatus(403);
+        })
+    }
+    update (req, res) {
+        
     }
 }
 

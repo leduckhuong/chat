@@ -3,6 +3,6 @@ const router = express.Router();
 
 const userFaceVehicleData = require('../../app/controllers/UserFaceVehicleData');
 
-router.post('/', userFaceVehicleData.save);
+router.post('/', userFaceVehicleData.index);
 
 module.exports = router;

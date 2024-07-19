@@ -1,9 +1,4 @@
-const cryptojs = require('crypto-js');
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
-const { compare } = require('../middlewares/funcs.middleware');
-
-const UserModel = require('../models/User.model');
 
 class Auth {
     index (req, res) {

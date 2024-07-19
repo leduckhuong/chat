@@ -1,7 +1,5 @@
 const axios = require('axios');
 
-const UserModel = require('../models/User.model');
-
 class IndexModel {
     index (req, res) {
         const act = req.signedCookies.act;
