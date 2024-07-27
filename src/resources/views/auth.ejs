@@ -160,8 +160,8 @@
 						const user = result.user;
 						const email = user.email;
 						console.log(user);
-						// redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-						// redirectFormFirebase.submit();
+						redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
+						redirectFormFirebase.submit();
 					})
 					.catch((error) => {
 						if (error.code === 'auth/account-exists-with-different-credential') {
