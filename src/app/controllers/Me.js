@@ -1,24 +1,23 @@
+const axios = require('axios');
+const createError = require('http-errors');
+
 class Me {
-    index (req, res) {
+    async index (req, res, next) {
         const act = req.signedCookies.act;
         if(!act) {
-            res.redirect('/login');
+            return res.redirect('/login');
         }
-        axios.get(`${process.env.AUTH_SERVER}/data`, {
-            headers: {
-                'Authorization': `Bearer ${act}`
-            }
-        })
-        .then(response => {
+        try {
+            const response = await axios.get(`${process.env.AUTH_SERVER}/data`, { headers: { 'Authorization': `Bearer ${act}` }});
             const user = response.data; 
-            res.render('me', {
-                user
-            });
-        })
-        .catch(error => {
-            console.log('Error: ', error);
-            res.sendStatus(403);
-        })
+            return res.render('me', { user });
+        } catch (error) {
+            if (error.response) {
+                next(createError(error.response.status, error.response.data.message));
+            } else {
+                next(createError(500, 'Internal server error'));
+            }
+        }
     }
     update (req, res) {
         

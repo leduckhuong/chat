@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/reset.css">
 	<link rel="stylesheet" href="/css/header.css">
 	<link rel="stylesheet" href="/css/auth.css">
+	<link rel="stylesheet" href="/css/banner.css">
 </head>
 <body>
 	<%- include('header')%>
@@ -16,9 +17,12 @@
 		<video class="video" autoplay muted loop>
 			<source src="/videos/sea10s.mp4" type="video/mp4">
 		</video>
+		<% if (typeof status === 'string') { %>
+			<%- include('partials/banner')%>
+		<% } %>
 		<div class="container" id="container">
 			<div class="form__container sign__up">
-				<form action="/auth/register" method="post">
+				<form action="/auth/register" method="post" id="form1">
 					<h1>Create Account</h1>
 					<div class="social__icons">
 						<a href="#" class="icon" id="googleRegister"><i class="fa-brands fa-google"></i></a>
@@ -26,15 +30,26 @@
 						<a href="#" class="icon" id="githubRegister"><i class="fa-brands fa-github"></i></a>
 						<a href="#" class="icon" id="linkedinRegister"><i class="fa-brands fa-linkedin-in"></i></a>
 					</div>
-					<span>or use your email for registeration</span>
-					<input type="email" name="email" id="email" placeholder="test@gmail.com">
-					<input type="password" name="password" id="password" placeholder="Password">
-					<input type="password" placeholder="Password">
+					<div class="form__group">
+						<label for="form1Email" class="form__label">Email</label>
+						<input id="form1Email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
+						<span class="form__message"></span>
+					</div>
+					<div class="form__group">
+						<label for="form1Password" class="form__label">Password</label>
+						<input id="form1Password" name="password" type="password" class="form-control">
+						<span class="form__message"></span>
+					</div>
+					<div class="form__group">
+						<label for="form1PasswordConfirmation" class="form__label">Confirm password!</label>
+						<input id="form1PasswordConfirmation" type="password" class="form-control">
+						<span class="form__message"></span>
+					</div>
 					<button type="submit">Sign Up</button>
 				</form>
 			</div>
 			<div class="form__container sign__in">
-				<form action="/auth/login" method="post">
+				<form action="/auth/login" method="post" id="form2">
 					<h1>Sign In</h1>
 					<div class="social__icons">
 						<a href="#" class="icon" id="googleLogin"><i class="fa-brands fa-google"></i></a>
@@ -42,9 +57,16 @@
 						<a href="#" class="icon" id="githubLogin"><i class="fa-brands fa-github"></i></a>
 						<a href="#" class="icon" id="linkedinLogin"><i class="fa-brands fa-linkedin-in"></i></a>
 					</div>
-					<span>or use your email for registeration</span>
-					<input type="email" name="email" id="email" placeholder="test@gmail.com">
-					<input type="password" name="password" id="password" placeholder="Password">
+					<div class="form__group">
+						<label for="form2Email" class="form__label">Email</label>
+						<input id="form2Email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
+						<span class="form__message"></span>
+					</div>
+					<div class="form__group">
+						<label for="form2Password" class="form__label">Password</label>
+						<input id="form2Password" name="password" type="password" class="form-control">
+						<span class="form__message"></span>
+					</div>
 					<div class="forget">
 						<a href="#">Forget Your Password?</a>
 					</div>
@@ -113,5 +135,44 @@
 		});
 	</script>
 	<script defer src="/js/auth.min.js"></script>
+	<script defer src="/js/validation.min.js"></script>
+	<script>
+        document.addEventListener('DOMContentLoaded', () => {
+			Validator({
+				form: '#form1',
+				formGroupSelector: '.form__group',
+				errorSelector: '.form__message',
+				rules: [
+					Validator.isRequired('#form1Email','Please input email hear!'),
+					Validator.isRequired('#form1Password', 'Please input new password!'),
+					Validator.minLength('#form1Password', 8),
+					Validator.maxLength('#form1Password', 12),
+					Validator.isCorrect('#form1Password', 'Format password is incorrect!'),
+					Validator.isComfirmed('#form1PasswordConfirmation',function(){
+						var passwordValue = document.querySelector('#form1 #form1Password'); 
+						return passwordValue.value;
+					},'Password is incorrect!'),
+					
+				],
+				onSubmit: function (data) {
+					//call API
+					console.log(data);
+				}
+			});
+			Validator({
+				form: '#form2',
+				formGroupSelector: '.form__group',
+				errorSelector: '.form__message',
+				rules: [
+					Validator.isRequired('#form2Email','Please input email hear!'),
+					Validator.isRequired('#form2Password', 'Please input new password!'),
+				],
+				onSubmit: function (data) {
+					//call API
+					console.log(data);
+				}
+			});
+		})
+    </script>
 </body>
 </html>

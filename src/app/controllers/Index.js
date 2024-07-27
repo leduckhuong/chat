@@ -1,29 +1,21 @@
 const axios = require('axios');
+const createError = require('http-errors');
 
 class IndexModel {
-    index (req, res) {
+    async index (req, res, next) {
         const act = req.signedCookies.act;
-        if(!act) {
-            res.render('index', {
-                data: null
-            });
-            return;
-        }
-        axios.get(`${process.env.AUTH_SERVER}/data`, {
-            headers: {
-                'Authorization': `Bearer ${act}`
-            }
-        })
-        .then(response => {
+        if(!act) return res.render('index', { data: null });
+        try {
+            const response = await axios.get(`${process.env.AUTH_SERVER}/data`, { headers: { 'Authorization': `Bearer ${act}` } });
             const user = response.data; 
-            res.render('index', {
-                user
-            });
-        })
-        .catch(error => {
-            console.log('Error: ', error);
-            res.sendStatus(403);
-        })
+            return res.render('index', { user });
+        } catch (error) {
+            if (error.response) {
+                next(createError(error.response.status, error.response.data.message));
+            } else {
+                next(createError(500, 'Internal server error'));
+            }
+        }
     }
 }
 

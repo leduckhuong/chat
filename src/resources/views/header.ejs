@@ -13,7 +13,7 @@
         <nav class="header__funcs">
             <% if (typeof user!='undefined') { %>
             <li class="header__func wrapper__subfuncs" style="cursor: default; position: relative;"><div class="header__link">
-                <i class="fa-solid fa-chevron-down" style="margin-right: 4px;"></i>Managements</div>
+                <i class="fa-solid fa-chevron-down"></i>Managements</div>
                 <ul class="header__subfuncs">
                     <li class="header__subfunc"><a href="#" class="header__link">Vehicle management</a></li>
                     <li class="header__subfunc"><a href="#" class="header__link">Ticket management</a></li>
@@ -32,9 +32,7 @@
                 </div>
                 Account</a>
             </li>
-            <li class="header__func wrapper__subfuncs" style="cursor: default; position: relative;"><div class="header__link">
-                Logout<i class="fa-solid fa-chevron-down" style="margin-right: 4px;"></i></div>
-            </li>
+            <li class="header__func"><a href="/auth/logout" class="header__link">Logout<i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
             <% } else { %>
             <li class="header__func"><a href="/auth" class="header__link">
                 <div class="header__icon" style="display: inline-block;">
