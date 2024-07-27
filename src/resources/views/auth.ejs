@@ -28,7 +28,7 @@
 						<a href="#" class="icon" id="googleRegister"><i class="fa-brands fa-google"></i></a>
 						<a href="#" class="icon" id="facebookRegister"><i class="fa-brands fa-facebook"></i></a>
 						<a href="#" class="icon" id="githubRegister"><i class="fa-brands fa-github"></i></a>
-						<a href="#" class="icon" id="linkedinRegister"><i class="fa-brands fa-linkedin-in"></i></a>
+						<a href="#" class="icon" id="linkedinRegister"><i class="fa-brands fa-x-twitter"></i></a>
 					</div>
 					<div class="form__group">
 						<label for="form1Email" class="form__label">Email</label>
@@ -55,7 +55,7 @@
 						<a href="#" class="icon" id="googleLogin"><i class="fa-brands fa-google"></i></a>
 						<a href="#" class="icon" id="facebookLogin"><i class="fa-brands fa-facebook"></i></a>
 						<a href="#" class="icon" id="githubLogin"><i class="fa-brands fa-github"></i></a>
-						<a href="#" class="icon" id="linkedinLogin"><i class="fa-brands fa-linkedin-in"></i></a>
+						<a href="#" class="icon" id="linkedinLogin"><i class="fa-brands fa-x-twitter"></i></a>
 					</div>
 					<div class="form__group">
 						<label for="form2Email" class="form__label">Email</label>
@@ -89,9 +89,14 @@
 			</div>
 		</div>
 	</div>
+	<form id="redirectFormFirebase" action="/auth/register-firebase" method="post" hidden>
+		<input type="hidden" id="redirectFormFirebaseEmail" name="email">
+		<input type="hidden" id="redirectFormFirebaseName" name="name">
+		<input type="hidden" id="redirectFormFirebaseMethod" name="method">
+	</form>	
 	<script type="module">
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-		import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+		import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, FacebookAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
 		const firebaseConfig = {
 			apiKey: "AIzaSyD5NWeZUrk9odIEgH7o_ILnMto7YUJggdU",
 			authDomain: "chat-dev-app-fdc6f.firebaseapp.com",
@@ -100,36 +105,73 @@
 			messagingSenderId: "449581428539",
 			appId: "1:449581428539:web:0739c58e3917fe7f77d11e"
 		};
+
 		const app = initializeApp(firebaseConfig);
 		const auth = getAuth(app);
-		const provider = new GoogleAuthProvider();
+		const googleProvider = new GoogleAuthProvider();
+		const githubProvider = new GithubAuthProvider();
+		const facebookProvider = new FacebookAuthProvider();
+
+		const googleRegister = document.getElementById('googleRegister');
+		const githubRegister = document.getElementById('githubRegister');
+		const facebookRegister = document.getElementById('facebookRegister');
+		const redirectFormFirebase = document.getElementById('redirectFormFirebase');
 
 		document.addEventListener("DOMContentLoaded", () => {
-			const googleRegister = document.getElementById('googleRegister');
+			// Register by google
 			googleRegister.addEventListener('click', () => {
-				signInWithPopup(auth, provider)
+				signInWithPopup(auth, googleProvider)
 					.then((result) => {
 						const user = result.user;
 						const email = user.email;
-						const passw = "123456";
-						fetch('/register', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json'
-							}, 
-							body: JSON.stringify({email, passw})
-						})
-						.then(response => response.json())
-						.then(data => {
-							console.log("Đăng ký thành công:", data);
-						})
-						.catch(error => {
-							console.error("Lỗi đăng ký:", error);
-						});
+						redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
+						redirectFormFirebase.submit();
 					})
 					.catch((error) => {
-						// Xử lý lỗi
 						console.error("Lỗi đăng nhập:", error);
+					});
+			});
+
+			// Register by github
+			githubRegister.addEventListener('click', () => {
+				signInWithPopup(auth, githubProvider)
+					.then((result) => {
+						const user = result.user;
+						const email = user.email;
+						redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
+						redirectFormFirebase.submit();
+					})
+					.catch((error) => {
+						if (error.code === 'auth/account-exists-with-different-credential') {
+							const email = error.customData.email;
+							redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
+							redirectFormFirebase.submit();
+						}
+						else {
+							console.log('Error');
+						}
+					});
+			});
+
+			// Register by facebook
+			facebookRegister.addEventListener('click', () => {
+				signInWithPopup(auth, facebookProvider)
+					.then((result) => {
+						const user = result.user;
+						const email = user.email;
+						console.log(user);
+						// redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
+						// redirectFormFirebase.submit();
+					})
+					.catch((error) => {
+						if (error.code === 'auth/account-exists-with-different-credential') {
+							const email = error.customData.email;
+							redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
+							redirectFormFirebase.submit();
+						}
+						else {
+							console.log('Error');
+						}
 					});
 			});
 		});
@@ -155,7 +197,6 @@
 					
 				],
 				onSubmit: function (data) {
-					//call API
 					console.log(data);
 				}
 			});

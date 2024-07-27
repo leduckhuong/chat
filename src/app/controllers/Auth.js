@@ -1,5 +1,6 @@
 const axios = require('axios');
 const createError = require('http-errors');
+var admin = require('../configs/firebase/index.firebase');
 
 class Auth {
     index (req, res) {
@@ -28,6 +29,37 @@ class Auth {
             }
         }
     }
+
+    async firebaseRegister(req, res, next) {
+        try {
+            const email = req.body.email;
+            const userRecord = (await admin.auth().getUserByEmail(email)).providerData[0];
+            if(!userRecord.email || !userRecord.displayName) return res.status(400).json({ message: 'Invalid request data' });
+            const userData = {
+                email: `${userRecord.providerId},${userRecord.email}`,
+                password: '123456',
+                name: userRecord.displayName,
+                method: userRecord.providerId,
+            }
+            const response = await axios.post(`${process.env.AUTH_SERVER}/register-firebase`, userData);
+            const {uid, accessToken} = response.data;
+            const cookieOptions = {
+                signed: true,
+                maxAge: 3600000
+            };
+            return res.cookie('act', accessToken, cookieOptions)
+            .cookie('uid', uid, cookieOptions)
+            .redirect('/');
+                       
+        } catch (error) {
+            if (error.response) {
+                next(createError(error.response.status, error.response.data.message));
+            } else {
+                next(createError(500, 'Internal server error'));
+            }
+        }
+    }
+
     async login(req, res) {
         const userData = req.body;
         if(!userData.email || !userData.password) return res.status(400).json({ message: 'Invalid request data' });
