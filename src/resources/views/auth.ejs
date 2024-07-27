@@ -15,7 +15,7 @@
 	<%- include('header')%>
     <div class="app">
 		<video class="video" autoplay muted loop>
-			<source src="/videos/sea10s.mp4" type="video/mp4">
+			<source src="/videos/sea2s.mp4" type="video/mp4">
 		</video>
 		<% if (typeof status === 'string') { %>
 			<%- include('partials/banner')%>
@@ -217,7 +217,7 @@
 					Validator.isComfirmed('#form1PasswordConfirmation',function(){
 						var passwordValue = document.querySelector('#form1 #form1Password'); 
 						return passwordValue.value;
-					},'Password is incorrect!'),
+					},'Password do not match!'),
 					
 				],
 				onSubmit: function (data) {
