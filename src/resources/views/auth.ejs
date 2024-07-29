@@ -89,10 +89,11 @@
 			</div>
 		</div>
 	</div>
-	<form id="redirectFormFirebase" action="/auth/register-firebase" method="post" hidden>
-		<input type="hidden" id="redirectFormFirebaseEmail" name="email">
-		<input type="hidden" id="redirectFormFirebaseName" name="name">
-		<input type="hidden" id="redirectFormFirebaseMethod" name="method">
+	<form id="redirectRegisterFirebase" action="/auth/register-firebase" method="post" hidden>
+		<input type="hidden" name="email">
+	</form>
+	<form id="redirectLoginFirebase" action="/auth/login-firebase" method="post" hidden>
+		<input type="hidden" name="email">
 	</form>	
 	<script type="module">
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
@@ -117,86 +118,73 @@
 		const githubRegister = document.getElementById('githubRegister');
 		const facebookRegister = document.getElementById('facebookRegister');
 		const twitterRegister = document.getElementById('twitterRegister');
-		const redirectFormFirebase = document.getElementById('redirectFormFirebase');
+
+		const googleLogin = document.getElementById('googleLogin');
+		const githubLogin = document.getElementById('githubLogin');
+		const facebookLogin = document.getElementById('facebookLogin');
+		const twitterLogin = document.getElementById('twitterLogin');
+
+		const redirectRegisterFirebase = document.getElementById('redirectRegisterFirebase');
+		const redirectLoginFirebase = document.getElementById('redirectLoginFirebase');
+
+		async function signin(auth, provider, formRedirect) {
+			try {
+				const user = await signInWithPopup(auth, provider);
+				if(!user) window.location.replace("http://127.0.0.1:3000/auth");
+				const email = user.email;
+				formRedirect.querySelector('input').value = email;
+				formRedirect.submit();
+			} catch (error) {
+				if (error.code === 'auth/account-exists-with-different-credential') {
+					const email = error.customData.email;
+					formRedirect.querySelector('input').value = email;
+					formRedirect.submit();
+				}
+				else {
+					console.error("Lỗi đăng nhập:", error);
+				}
+			}
+		}
 
 		document.addEventListener("DOMContentLoaded", () => {
 			// Register by google
 			googleRegister.addEventListener('click', () => {
-				signInWithPopup(auth, googleProvider)
-					.then((result) => {
-						const user = result.user;
-						const email = user.email;
-						redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-						redirectFormFirebase.submit();
-					})
-					.catch((error) => {
-						console.error("Lỗi đăng nhập:", error);
-					});
+				signin(auth, googleProvider, redirectRegisterFirebase);
 			});
 
 			// Register by github
 			githubRegister.addEventListener('click', () => {
-				signInWithPopup(auth, githubProvider)
-					.then((result) => {
-						const user = result.user;
-						const email = user.email;
-						redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-						redirectFormFirebase.submit();
-					})
-					.catch((error) => {
-						if (error.code === 'auth/account-exists-with-different-credential') {
-							const email = error.customData.email;
-							redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-							redirectFormFirebase.submit();
-						}
-						else {
-							console.log('Error');
-						}
-					});
+				signin(auth, githubProvider, redirectRegisterFirebase);
 			});
 
 			// Register by facebook
 			facebookRegister.addEventListener('click', () => {
-				signInWithPopup(auth, facebookProvider)
-					.then((result) => {
-						const user = result.user;
-						const email = user.email;
-						redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-						redirectFormFirebase.submit();
-					})
-					.catch((error) => {
-						if (error.code === 'auth/account-exists-with-different-credential') {
-							const email = error.customData.email;
-							redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-							redirectFormFirebase.submit();
-						}
-						else {
-							console.log('Error');
-						}
-					});
+				signin(auth, facebookProvider, redirectRegisterFirebase);
 			});
 
 			// Register by twitter
 			twitterRegister.addEventListener('click', () => {
-				signInWithPopup(auth, twitterProvider)
-					.then((result) => {
-						const user = result.user;
-						const email = user.email;
-						console.log(user);
-						// redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-						// redirectFormFirebase.submit();
-					})
-					.catch((error) => {
-						if (error.code === 'auth/account-exists-with-different-credential') {
-							const email = error.customData.email;
-							console.log(email);
-							// redirectFormFirebase.querySelector('#redirectFormFirebaseEmail').value = email;
-							// redirectFormFirebase.submit();
-						}
-						else {
-							console.log('Error: ', error);
-						}
-					});
+				signin(auth, twitterProvider, redirectRegisterFirebase);
+			});
+
+			// Login by google
+			googleLogin.addEventListener('click', () => {
+				signin(auth, googleProvider, redirectLoginFirebase);
+			});
+
+			// Login by github
+			githubLogin.addEventListener('click', () => {
+				signin(auth, githubProvider, redirectLoginFirebase);
+			});
+
+			// Login by facebook
+			facebookLogin.addEventListener('click', () => {
+				signin(auth, facebookProvider, redirectLoginFirebase);
+			});
+
+			// Login by twitter
+			twitterLogin.addEventListener('click', () => {
+				signin(auth, twitterProvider, redirectLoginFirebase);
 			});
 		});
 	</script>
@@ -214,15 +202,12 @@
 					Validator.minLength('#form1Password', 8),
 					Validator.maxLength('#form1Password', 12),
 					Validator.isCorrect('#form1Password', 'Format password is incorrect!'),
+					Validator.isRequired('#form1PasswordConfirmation', 'Please input your password!'),
 					Validator.isComfirmed('#form1PasswordConfirmation',function(){
 						var passwordValue = document.querySelector('#form1 #form1Password'); 
 						return passwordValue.value;
-					},'Password do not match!'),
-					
-				],
-				onSubmit: function (data) {
-					console.log(data);
-				}
+					},'Password do not match!'),	
+				]
 			});
 			Validator({
 				form: '#form2',
@@ -230,12 +215,8 @@
 				errorSelector: '.form__message',
 				rules: [
 					Validator.isRequired('#form2Email','Please input email hear!'),
-					Validator.isRequired('#form2Password', 'Please input new password!'),
-				],
-				onSubmit: function (data) {
-					//call API
-					console.log(data);
-				}
+					Validator.isRequired('#form2Password', 'Please input your password!'),
+				]
 			});
 		})
     </script>

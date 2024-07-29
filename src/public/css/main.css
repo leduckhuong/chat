@@ -1,1 +1,1 @@
-main{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;background:url("/imgs/automatic-parking-system.jpg") top center/cover no-repeat}main .video-wrapper{position:relative}main canvas{position:absolute;top:0;left:0}
+main{background-color:#7fffd4;width:100vw;height:100vh;background:url("/imgs/slide1.jpg") top center/cover no-repeat}main .main__cover{width:100%;height:100%;background-color:rgba(0,0,0,.4)}

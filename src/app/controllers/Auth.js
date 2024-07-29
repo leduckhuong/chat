@@ -60,6 +60,34 @@ class Auth {
         }
     }
 
+    async firebaseLogin(req, res, next) {
+        try {
+            const email = req.body.email;
+            const userRecord = (await admin.auth().getUserByEmail(email)).providerData[0];
+            if(!userRecord.email || !userRecord.displayName) return res.status(400).json({ message: 'Invalid request data' });
+            const userData = {
+                email: `${userRecord.providerId},${userRecord.email}`,
+                method: userRecord.providerId,
+            }
+            const response = await axios.post(`${process.env.AUTH_SERVER}/login-firebase`, userData);
+            const {uid, accessToken} = response.data;
+            const cookieOptions = {
+                signed: true,
+                maxAge: 3600000
+            };
+            return res.cookie('act', accessToken, cookieOptions)
+            .cookie('uid', uid, cookieOptions)
+            .redirect('/');
+                       
+        } catch (error) {
+            if (error.response) {
+                next(createError(error.response.status, error.response.data.message));
+            } else {
+                next(createError(500, 'Internal server error'));
+            }
+        }
+    }
+
     async login(req, res) {
         const userData = req.body;
         if(!userData.email || !userData.password) return res.status(400).json({ message: 'Invalid request data' });
