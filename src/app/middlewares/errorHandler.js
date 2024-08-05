@@ -1,60 +1,64 @@
 const axios = require('axios');
 
-const UserModel = require('../models/User.model');
+const newAccessToken = require('../utils/newAccessToken.util');
 
-const getNewAccessToken = async (refreshToken) => {
-    try {
-        const response = await axios.post(`${process.env.AUTH_SERVER}/token`, {refreshToken});
-        return response.data.accessToken;
-    } catch (error) {
-        console.error('Error getting new accessToken:', error);
-        throw error;
-    }
-};
+const getData = require('../utils/getData.util');
 
 module.exports = async function errorHandler (err, req, res, next) {
+    console.log(req.url);
     switch (err.status) {
         case 401:
-            return res.send('401');
+            console.log('Is errorHandle 401');
+            switch (req.url) {
+                case '/auth/verify':
+                    return res.cookie('status', 'verify-error', {maxAge: 2000})
+                    .redirect('/auth/verify');
+                default:
+                    return res.cookie('status', 'fail', { maxAge: 2000 })
+                    .redirect('/auth');
+            }
         case 403:
             console.log('Is errorHandle 403');
+            const cookieOptions = { signed: true, maxAge: 3600000 };
             const uid = req.signedCookies.uid;
-            if(!uid) {
-                res.redirect('/login');
-            }
+            const act = req.signedCookies.act;
+            let user, newAccessToken;
             try {
-                const user = await UserModel.findById(uid);
-                if(!user) return res.status(404).json({ message: 'User not found!' });
-                const refreshToken = user.refreshToken;
-                const newAccessToken = await getNewAccessToken(refreshToken);
-                const cookieOptions = {
-                    signed: true,
-                    maxAge: 3600000
-                };
-                if(req.url === '/') {
-                    return res.cookie('act', newAccessToken, cookieOptions).render('index', {
-                        user
-                    });
+                if(req.url==='/' || req.url==='/me' || req.url==='/employ/register') {
+                    if(!uid || !act) return res.redirect('/auth');
+                    newAccessToken = await newAccessToken(uid);
+                    user = await getData(newAccessToken);
                 }
-                if(req.url === '/me') {
-                    return res.cookie('act', newAccessToken, cookieOptions).render('me', {
-                        user
-                    });
+                switch (req.url) {
+                    case '/':
+                        return res.cookie('act', newAccessToken, cookieOptions).render('index', { user });
+                    case '/me':
+                        return res.cookie('act', newAccessToken, cookieOptions).render('me', { user });
+                    case '/employ/register':
+                        const email = user.email;
+                        const userData = { email, ...req.body }
+                        await axios.post(`${process.env.AUTH_SERVER}/register-employ`, userData);
+                        return res.redirect('/');
+                    case '/auth/login':
+                        return res.cookie('status', 'verify-warning', {maxAge: 2000})
+                        .redirect('/auth/verify');
+                    case '/auth/logout':
+                        return res.redirect('/auth');
+                    default: 
+                        return res.render('index');
                 }
-                return res.render('index');
             } catch (error) {
                 return res.status(500).json({ message: 'Failed to get new access token!' });
             }
         case 404:
             return res.send('404');
         case 409:
-            return res.cookie('status', 'conflict', {
-                maxAge: 60000
-            })
+            return res.cookie('status', 'conflict', { maxAge: 2000 })
             .redirect('/auth');
         case 500:
             return res.send('500');
         default:
+            console.log(err);
             return res.send('Error');
     }
 }
