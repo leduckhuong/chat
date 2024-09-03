@@ -1,10 +1,11 @@
 <link rel="stylesheet" href="/css/header.css">
-<header id="header" class="h-24 fixed top-0 left-0 right-0" style="background-color: rgba(255, 115, 115, 0.1);">
-    <div class="w-full h-full px-4 lg:px-12 flex items-center justify-between">
-        <div class="header__logo" style="height: 100%;">
-            <a href="/" class="flex justify-center items-center" style="height: 100%;">
-                <img class="h-20" src="/logos/logo2.png" alt="app logo">
-                <span>CHAT APP</span>
+<% if (typeof languages !=='undefined' && currentLang !== 'undefined' ) { %>
+<header id="header" class="h-24 w-full backdrop-blur fixed top-0 left-0 right-0 z-50 border-cyan-900 border-b border-solid">
+    <div class="max-w-screen-xl h-full mx-auto flex items-center justify-between">
+        <div class="header__logo">
+            <a href="/" class="flex justify-center items-center h-full">
+                <img class="h-16" src="/logos/logo2.png" alt="app logo">
+                <span class="ml-4 text-3xl font-semibold">CHAT APP</span>
             </a>
         </div>
         <div class="header__nav relative flex h-full min-w-24">
@@ -14,16 +15,56 @@
                 <div></div>
                 <div></div> 
             </label>
-            <nav class="hidden lg:flex lg:h-full absolute right-0 top-24 lg:static bg-gray-500 lg:bg-transparent">
-                <li class="h-full"><a class="flex justify-between items-center px-12 lg:px-4 h-full hover:bg-sky-200" href="/help">
-                    <svg xmlns="http://www.w3.org/3000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512; margin-right: 4px;" xml:space="preserve" class=""><g><path d="M256 0C114.509 0 0 114.496 0 256c0 141.489 114.496 256 256 256 141.491 0 256-114.496 256-256C512 114.509 397.504 0 256 0zm0 476.279c-121.462 0-220.279-98.816-220.279-220.279S134.538 35.721 256 35.721c121.463 0 220.279 98.816 220.279 220.279S377.463 476.279 256 476.279z" fill="#fff" opacity="1" data-original="#fff" class=""></path><path d="M248.425 323.924c-14.153 0-25.61 11.794-25.61 25.946 0 13.817 11.12 25.948 25.61 25.948s25.946-12.131 25.946-25.948c0-14.152-11.794-25.946-25.946-25.946zM252.805 127.469c-45.492 0-66.384 26.959-66.384 45.155 0 13.142 11.12 19.208 20.218 19.208 18.197 0 10.784-25.948 45.155-25.948 16.848 0 30.328 7.414 30.328 22.915 0 18.196-18.871 28.642-29.991 38.077-9.773 8.423-22.577 22.24-22.577 51.22 0 17.522 4.718 22.577 18.533 22.577 16.511 0 19.881-7.413 19.881-13.817 0-17.522.337-27.631 18.871-42.121 9.098-7.076 37.74-29.991 37.74-61.666s-28.642-55.6-71.774-55.6z" fill="#fff" opacity="1" data-original="#fff" class=""></path></g></svg>
-                    Help
-                </a></li>
-                <li class="h-full"><a class="flex justify-between items-center px-12 lg:px-4 h-full hover:bg-sky-200" href="/login">
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512; margin-right: 4px;" xml:space="preserve" class=""><g><path d="M260.52 329.539a24 24 0 0 0 33.941 33.941l90.51-90.51a24 24 0 0 0 0-33.941l-90.51-90.509a24 24 0 0 0-33.941 0 24 24 0 0 0 0 33.941L310.059 232H48a24 24 0 0 0-24 24 24 24 0 0 0 24 24h262.059z" fill="#fff" opacity="1" data-original="#fff" class=""></path><path d="M448 24H224a40 40 0 0 0-40 40v32a24 24 0 0 0 48 0V72h208v368H232v-24a24 24 0 0 0-48 0v32a40 40 0 0 0 40 40h224a40 40 0 0 0 40-40V64a40 40 0 0 0-40-40z" fill="#fff" opacity="1" data-original="#fff" class=""></path></g></svg>
-                    Login
-                </a></li>
+            <nav class="hidden lg:flex lg:h-full lg:relative bg-gray-500 lg:bg-transparent">
+                <% languages.filter(language => language.ele === 'header_nav').forEach(function(headerNav){ %>
+                    <li class="h-full"><a class="flex justify-between items-center px-12 lg:px-4 h-full hover:text-sky-500 font-medium" href="/<%= headerNav.content %>">
+                        <i class="<%= headerNav.icon %> mr-1"></i>
+                        <%= headerNav.name %>
+                    </a></li>
+                <% }); %>
             </nav>
+            <ul class="flex">
+                <li class="flex justify-between items-center px-12 lg:px-4 h-full font-medium cursor-pointer relative">
+                    <% languages.filter(language => language.ele === 'header_theme').forEach(function(headerTheme){ %>
+                        <i class="theme-icon <%= headerTheme.content %> <%= headerTheme.icon %> min-w-7 mr-1 text-sky-500"></i>
+                    <% }); %>
+                    <ul id="themes" class="absolute z-20 top-full left-0 hidden">
+                        <% languages.filter(language => language.ele === 'header_theme').forEach(function(headerTheme){ %>
+                            <li class="theme-option px-2 py-1 min-w-48 hover:bg-slate-400 dark:hover:bg-slate-600">
+                                <i class="<%= headerTheme.icon %> min-w-6 mr-4"></i>
+                                <%= headerTheme.name %>
+                            </li>
+                        <% }); %>
+                    </ul>
+                    <div id="overlayThemes" class="fixed z-10 top-0 left-0 h-screen w-screen hidden"></div>
+                </li>
+                <li class="relative">
+                    <span class="language-icon flex justify-between items-center px-12 lg:px-4 h-full font-medium cursor-pointer">
+                        <div class="w-8 h-8 mr-1" style="background: url('<%= currentLang.icon %>') top center / cover no-repeat;"></div><%= currentLang.content %>
+                    </span>
+                    <ul id="languages" class="absolute z-20 top-full left-0 hidden">
+                        <% languages.filter(language => language.ele === 'header_language').forEach(function(headerLanguage){ %>
+                            <li class="language-option flex px-4 py-2 min-w-56 hover:bg-slate-400 dark:hover:bg-slate-600 cursor-pointer" data-code="<%= headerLanguage.content %>">
+                                <img src="<%= headerLanguage.icon %>" class="w-8 h-8 mr-4">
+                                <%= headerLanguage.name %>
+                            </li>
+                        <% }); %>
+                    </ul>
+                    <div id="overlayLangs" class="fixed z-10 top-0 left-0 h-screen w-screen hidden"></div>
+                </li>
+            </ul>            
         </div>
     </div>
 </header>
+<% } %>
+<script>
+    // reset menu checkbox
+    document.addEventListener('DOMContentLoaded', () => {
+        const menu_checkbox = document.getElementById('menu_checkbox');
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1023) menu_checkbox.checked = false;
+        });
+    });
+</script>
+<script src="/js/themeHandler.min.js" defer></script>
+<script src="/js/languageHandler.min.js" defer></script>
