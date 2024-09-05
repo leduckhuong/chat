@@ -1,49 +1,34 @@
 <link rel="stylesheet" href="/css/footer.css">
-<footer id="footer" class="pt-48 pb-16 border-orange-900 border-t-2 border-solid text-slate-400 dark:text-slate-500 bg-slate-900 dark:bg-white antialiased relative z-0 overflow-hidden">
+<% if (typeof languages !=='undefined' ) { %>
+<footer id="footer" class="pt-48 pb-16 px-2 lg:px-0 border-orange-900 border-t-2 border-solid text-slate-400 dark:text-slate-500 bg-slate-900 dark:bg-white antialiased relative z-0 overflow-hidden">
     <div class="max-w-screen-xl mx-auto">
-        <div class="footer__on flex justify-between">
-            <div class="footer__title w-1/4">
-                <div class="flex items-center">
+        <div class="flex flex-col lg:flex-row justify-center items-center lg:items-start lg:justify-between">
+            <div class="w-1/2 lg:w-1/4 ">
+                <div class="flex items-center justify-center lg:justify-start">
                     <img class="h-16" src="/logos/logo2.png" alt="app logo">
                     <span class="ml-4 text-3xl font-semibold">CHAT APP</span>
                 </div>
-                <p class="text-justify mt-9 leading-9 hyphens-auto">''Instant messaging, connecting everywhere, helps you stay in touch constantly with the important people in your life. With the ability to chat instantly and easily share every moment, you'll always feel close no matter where you are. Our advanced technology ensures smooth and continuous connectivity, providing you with a perfect communication experience.''</p>
+                <p class="text-justify mt-9 leading-9 hyphens-auto"><%= languages.find(language => language.ele === 'footer_message')['name']; %></p>
             </div>
-            <div class="font-semibold uppercase">
-                Discover
-                <ul class="normal-case font-normal mt-16">
-                    <li class="leading-10">Home</li>
-                    <li class="leading-10">About Us</li>
-                    <li class="leading-10">Contact</li>
-                </ul>
-            </div>
-            <div class="font-semibold uppercase">
-                About
-                <ul class="normal-case font-normal mt-16">
-                    <li class="leading-10">Team</li>
-                    <li class="leading-10">Us</li>
-                    <li class="leading-10">App</li>
-                </ul>
-            </div>
-            <div class="font-semibold uppercase">
-                Help
-                <ul class="normal-case font-normal mt-16">
-                    <li class="leading-10">Privacy Policy</li>
-                    <li class="leading-10">Terms & Conditions</li>
-                    <li class="leading-10">Partners</li>
-                </ul>
-            </div>
-            <div class="font-semibold uppercase">
-                Follow Us
-                <ul class="normal-case font-normal mt-16">
-                    <li class="leading-10 text-cyan-500"><a href="#"><i class="fa-brands fa-facebook mr-2"></i>Facebook</a></li>
-                    <li class="leading-10 text-cyan-500"><a href="#"><i class="fa-brands fa-instagram mr-2"></i>Instagram</a></li>
-                    <li class="leading-10 text-cyan-500"><a href="#"><i class="fa-brands fa-x-twitter mr-2"></i>Twitter</a></li>
-                </ul>
-            </div>
+            <% languages.filter(language => language.ele === 'footer_title').forEach(function(footerTitle, index){ %>
+                <div class="font-semibold uppercase text-center lg:text-left mt-12 lg:mt-0">
+                    <%= footerTitle.name %>
+                    <ul class="normal-case font-normal mt-6 lg:mt-16">
+                        <% const footerContent = languages.find(language => ( language.ele === 'footer_content' && language.index === index )) %>
+                        <% JSON.parse(footerContent['name']).forEach((name, id) => { %>
+                            <% if (index < 3) { %>
+                                <li class="leading-10"><%= name %></li>
+                            <% } else { %>
+                                <li class="leading-10 text-cyan-500"><a href="#"><i class="<%= JSON.parse(footerContent['icon'])[id] %> mr-2"></i><%= name %></a></li>
+                            <% } %>
+                        <% }); %>
+                    </ul>
+                </div>
+            <% }); %>
         </div>
         <div class="flex justify-center mt-48 italic">
-            <span>Create by Le_Duc_Khuong v1.0</span>
+            <span>Create by Le_Duc_Khuong v1.</span>
         </div>
     </div>
 </footer>
+<% } %>

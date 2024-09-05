@@ -1,1 +1,1 @@
-header nav::before{content:"";position:absolute;top:30%;right:0;height:40%;border-left:1px solid rgba(54,247,247,.2)}
+@media only screen and (min-width: 1024px){header nav::before{content:"";position:absolute;top:30%;right:0;height:40%;border-left:1px solid rgba(54,247,247,.2)}}#menu_checkbox:checked~.header-nav{transform:translateX(0)}.header-nav #overlayNav{top:-60px;left:172px;transform:translateX(-100%);z-index:-1}#menu_checkbox:checked~.header-nav #overlayNav{display:block}

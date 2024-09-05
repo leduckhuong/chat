@@ -1,22 +1,24 @@
 <link rel="stylesheet" href="/css/main.css">
 <% if (typeof languages !=='undefined') { %>
 <main id="main" class="backdrop-blur">
-    <div class="max-w-screen-xl mx-auto py-24 flex">
-        <div class="basis-2/4 max-w-2xl">
-            <h1 class="gradient-text text-9xl pb-4"><%= languages.find(language => language.ele === 'slide_title')['name'] %></h1>
-            <p class="text-2xl leading-10 max-w-3xl"><%= languages.find(language => language.ele === 'slide_slogan')['name'] %></p>
-            <button class="mt-12 bg-indigo-500 px-8 py-4 rounded-full font-semibold text-white hover:bg-indigo-600">
-                <%= languages.find(language => language.ele === 'slide_btn')['name'] %>
-            </button>
+    <div class="max-w-screen-xl mx-auto py-24 flex flex-col lg:flex-row px-2 lg:px-0">
+        <div class="flex-1 order-2 lg:order-1">
+            <div class="lg:max-w-2xl lg:mx-auto mt-12 lg:mt-0">
+                <h1 class="gradient-text text-9xl pb-4"><%= languages.find(language => language.ele === 'slide_title')['name'] %></h1>
+                <p class="text-2xl leading-10 max-w-3xl"><%= languages.find(language => language.ele === 'slide_slogan')['name'] %></p>
+                <button class="mt-12 bg-indigo-500 px-8 py-4 rounded-full font-semibold text-white hover:bg-indigo-600">
+                    <%= languages.find(language => language.ele === 'slide_btn')['name'] %>
+                </button>
+            </div>
         </div>
-        <div class="slide-size basis-2/4 ml-auto">
-            <div class="slide__carousel size-full">
+        <div class="flex-1 order-1 lg:order-2 pt-[50%] relative">
+            <div class="slide__carousel absolute top-0 bottom-0 left-0 right-0">
                 <div class="splide size-full" role="group" aria-label="Splide Basic HTML Example">
                     <div class="splide__track size-full">
                         <ul class="splide__list size-full">
-                            <li class="splide__slide size-full"><a class="block size-full" href="#">Slide 01 </a></li>
-                            <li class="splide__slide size-full"><a class="block size-full" href="#">Slide 02 </a></li>
-                            <li class="splide__slide size-full"><a class="block size-full" href="#">Slide 03 </a></li>
+                            <li class="splide__slide"><a class="block" href="#">Slide 01 </a></li>
+                            <li class="splide__slide"><a class="block" href="#">Slide 02 </a></li>
+                            <li class="splide__slide"><a class="block" href="#">Slide 03 </a></li>
                         </ul>
                     </div>
                 </div>
