@@ -11,11 +11,21 @@
     <link rel="stylesheet" href="/css/reset.css"> 
     <link rel="stylesheet" href="/css/index.css"> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src=" https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js "></script>
+    <script src=" https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js " defer></script>
 </head>
 <body class="min-h-screen pt-24 antialiased text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 relative z-0">
-    <%- include('partials/header') %>
-    <%- include('partials/main') %>
-    <%- include('partials/footer') %>
+    <%- include('partials/header');%>
+    <% if ( typeof isLogin !== 'undefined' ) { %>
+        <%- include('partials/login'); %>
+    <% } else if (typeof isRegister !== 'undefined') { %>
+        <%- include('partials/register'); %>
+    <% } else if (typeof isVerify !== 'undefined') { %>
+        <%- include('partials/verify'); %>
+    <% } else if (typeof isInsertDoc !== 'undefined') { %>
+        <%- include('partials/insertDoc'); %>
+    <% } else { %>
+        <%- include('partials/main'); %>
+    <% }; %>
+    <%- include('partials/footer'); %>
 </body>
 </html>

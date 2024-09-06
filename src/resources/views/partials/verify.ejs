@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="/css/form.css">
+<% if (typeof languages !=='undefined') { %>
+<div class="h-screen backdrop-blur flex justify-center items-center">
+    <div class="">
+        <form action="/register/verify" class="min-w-[40rem] mx-auto bg-amber-900 text-white dark:bg-white dark:text-slate-600 py-16 px-4 rounded-md" method="post">
+            <h1 class="text-center text-5xl font-semibold"><%= languages.find(language => language.ele === 'verify_title')['name'] %></h1>
+            <div class="form__group">
+                <label for=""><%= languages.find(language => language.ele === 'verify_label')['name'] %></label>
+                <input type="text" name="code" class="form__controll" placeholder="<%= languages.find(language => language.ele === 'verify_input')['name'] %>">
+                <div class="form__message"></div>
+            </div>
+            <button type="submit" class="form__controll bg-cyan-700"><%= languages.find(language => language.ele === 'verify_submit')['name'] %></button>
+            <div class="flex justify-between items-center font-semibold text-3xl mt-8">
+                <%= languages.find(language => language.ele === 'timer_title')['name'] %>:
+                <%- include('countdown')%>
+            </div>
+        </form>
+    </div>
+</div>
+<% } %>

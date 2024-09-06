@@ -1,0 +1,27 @@
+<% if ( typeof time!=='undefined' && time>0 ) { %>
+<div id="countdown" data-time="<%= time %>" data-out="<%= languages.find(language => language.ele === 'timer_out')['name'] %>" class="text-3xl">
+    <span id="timer"><%= time %></span> 
+    <span><%= languages.find(language => language.ele === 'timer_sencond')['name'] %></span>
+</div>
+<% } else { %>
+<div id="countdown" class="text-3xl">
+    <span id="timer"><%= languages.find(language => language.ele === 'timer_out')['name'] %></span>
+</div>
+<% } %>
+<script defer>
+    const countdown = document.getElementById('countdown');
+    const timerElement = document.getElementById('timer');
+    let timeout = countdown.dataset.out;
+    let timeLeft = parseInt(countdown.dataset.time, 10);
+    if(timeLeft && timeLeft > 0) {
+        function updateTimer() {
+            timeLeft--;
+            timerElement.textContent = `${timeLeft}`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                countdown.textContent = timeout;
+            }
+        } 
+        const timerInterval = setInterval(updateTimer, 1000);
+    }
+</script>

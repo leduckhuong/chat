@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="/css/form.css">
+<% if (typeof languages !=='undefined') { %>
+<div class="h-screen backdrop-blur flex justify-center items-center">
+    <div class="">
+        <form action="" class="min-w-[40rem] mx-auto bg-amber-900 text-white dark:bg-white dark:text-slate-600 py-16 px-4 rounded-md">
+            <h1 class="text-center text-5xl font-semibold"><%= languages.find(language => language.ele === 'login_title')['name'] %></h1>
+            <% languages.filter(language => language.ele === 'login_input').forEach(function(headerInput){ %>
+                <div class="form__group">
+                    <label for=""><%= headerInput.name %></label>
+                    <input type="text" name="<%= headerInput.content %>" class="form__controll" placeholder="<%= headerInput.icon %>">
+                    <div class="form__message"></div>
+                </div>
+            <% }); %>
+            <div class="form__group">
+                <input type="submit" class="form__controll bg-cyan-700" value="<%= languages.find(language => language.ele === 'login_submit')['name'] %>">
+            </div>
+            <a href="/forgot" class="block mt-4 italic"><%= languages.find(language => language.ele === 'login_forgot')['name'] %></a>
+            <a href="/register" class="block mt-4 text-center"><%= languages.find(language => language.ele === 'login_register')['name'] %></a><p class="text-center text-slate-400">or</p>
+            <ul class="flex justify-center items-center">
+                <li class="w-16 h-16 flex justify-center items-center text-3xl text-sky-600 cursor-pointer opacity-50 hover:opacity-100"><i class="fa-brands fa-facebook"></i></li>
+                <li class="w-16 h-16 flex justify-center items-center text-3xl text-sky-600 cursor-pointer opacity-50 hover:opacity-100"><i class="fa-brands fa-google"></i></li>
+                <li class="w-16 h-16 flex justify-center items-center text-3xl text-sky-600 cursor-pointer opacity-50 hover:opacity-100"><i class="fa-brands fa-github"></i></li>
+                <li class="w-16 h-16 flex justify-center items-center text-3xl text-sky-600 cursor-pointer opacity-50 hover:opacity-100"><i class="fa-brands fa-x-twitter"></i></li>
+            </ul>
+        </form>
+    </div>
+</div>
+<% } %>

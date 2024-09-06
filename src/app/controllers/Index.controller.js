@@ -1,27 +1,15 @@
 const axios = require('axios');
 const createError = require('http-errors');
+const getLanguage = require('../utils/getLanguage.util');
 
-const Languages = require('../models/Languages.model');
-const LanguagesModel = require('../models/Languages.model');
 
 class IndexModel {
     async index (req, res, next) {
-        const langCode = req.cookies.userLang;
+        let langCode = req.cookies.userLang;
         try {
-            let currentLang, languages;
-            if(langCode) {
-                languages = await Languages.find({code: langCode});
-                currentLang = await LanguagesModel.findOne({content: langCode, code: 'en'});
-            } else {
-                languages = await Languages.find({code: 'en'});
-                currentLang = await LanguagesModel.findOne({content: 'en', code: 'en'});
-            }
-            languages.sort(function(a, b) {
-                return a.index - b.index;
-            });
+            let languages = await getLanguage(langCode);
             res.render('index', {
-                languages,
-                currentLang
+                languages
             });
         } catch (error) {
             res.send('Error!');
