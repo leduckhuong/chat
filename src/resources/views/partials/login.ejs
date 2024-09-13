@@ -2,7 +2,7 @@
 <% if (typeof languages !=='undefined') { %>
 <div class="h-screen backdrop-blur flex justify-center items-center">
     <div class="">
-        <form action="" class="min-w-[40rem] mx-auto bg-amber-900 text-white dark:bg-white dark:text-slate-600 py-16 px-4 rounded-md">
+        <form action="/login" method="post" class="min-w-[40rem] mx-auto bg-amber-900 text-white dark:bg-white dark:text-slate-600 py-16 px-4 rounded-md">
             <h1 class="text-center text-5xl font-semibold"><%= languages.find(language => language.ele === 'login_title')['name'] %></h1>
             <% languages.filter(language => language.ele === 'login_input').forEach(function(headerInput){ %>
                 <div class="form__group">

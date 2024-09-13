@@ -1,32 +1,25 @@
 const axios = require('axios');
-const createError = require('http-errors');
-const getLanguage = require('../utils/getLanguage.util');
+const getLanguageUtil = require('../utils/getLanguage.util');
+const errorFlowUtil = require('../utils/errorFlow.util');
 
 
 class IndexModel {
     async index (req, res, next) {
         let langCode = req.cookies.userLang;
+        const act = req.signedCookies.act;
         try {
-            let languages = await getLanguage(langCode);
-            res.render('index', {
-                languages
-            });
+            let languages = await getLanguageUtil(langCode);
+            if(!act) {
+                return res.render('index', {
+                    languages
+                });
+            }
+            const response = await axios.get(`${process.env.AUTH_SERVER}/data`, { headers: { 'Authorization': `Bearer ${act}` } });
+            const user = response.data;
+            return res.render('index', { languages, user });
         } catch (error) {
-            res.send('Error!');
+            errorFlowUtil(error, next);
         }
-        // const act = req.signedCookies.act;
-        // if(!act) return res.render('index', { data: null });
-        // try {
-        //     const response = await axios.get(`${process.env.AUTH_SERVER}/data`, { headers: { 'Authorization': `Bearer ${act}` } });
-        //     const user = response.data; 
-        //     return res.render('index', { user });
-        // } catch (error) {
-        //     if (error.response) {
-        //         next(createError(error.response.status, error.response.data.message));
-        //     } else {
-        //         next(createError(500, 'Internal server error'));
-        //     }
-        // }
     }
 }
 

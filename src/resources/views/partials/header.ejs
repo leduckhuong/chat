@@ -13,7 +13,9 @@
             <input type="checkbox" id="menu_checkbox">
             <nav class="header-nav flex flex-col lg:flex-row lg:h-full bg-transparent absolute top-full right-0 lg:relative lg:top-0 lg:left-0 lg:right-auto z-20 translate-x-full lg:translate-x-0 ease-in-out duration-300">
                 <% languages.filter(language => language.ele === 'header_nav').forEach(function(headerNav){ %>
-                    <% if (headerNav.content === 'login' && (typeof isLogin !== 'undefined' || typeof isRegister !== 'undefined' || typeof isVerify !== 'undefined')) return; %>
+                    <% if ((headerNav.content === 'login' || headerNav.content === 'logout') && (typeof isLogin !== 'undefined' || typeof isRegister !== 'undefined' || typeof isVerify !== 'undefined')) return; %>
+                    <% if (headerNav.content === 'logout' && typeof user === 'undefined') return; %>
+                    <% if (headerNav.content === 'login' && typeof user !== 'undefined') return; %>
                     <li class="h-full"><a class="flex justify-normal lg:justify-between items-center py-2 px-8 lg:px-4 h-full min-w-max hover:text-sky-500 font-medium" href="/<%= headerNav.content %>">
                         <i class="<%= headerNav.icon %> mr-1"></i>
                         <%= headerNav.name %>
