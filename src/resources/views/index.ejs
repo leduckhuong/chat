@@ -22,7 +22,9 @@
     <% } else if (typeof isVerify !== 'undefined') { %>
         <%- include('partials/verify'); %>
     <% } else if (typeof isInsertDoc !== 'undefined') { %>
-        <%- include('partials/insertDoc'); %>
+        <%- include('partials/verify'); %>
+    <% } else if (typeof isExploit !== 'undefined') { %>
+        <%- include('partials/exploit'); %>
     <% } else { %>
         <%- include('partials/main'); %>
     <% }; %>

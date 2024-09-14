@@ -2,7 +2,7 @@
 <% if (typeof languages !=='undefined') { %>
 <div class="h-screen backdrop-blur flex justify-center items-center">
     <div class="">
-        <form action="/register/verify" class="min-w-[40rem] mx-auto bg-amber-900 text-white dark:bg-white dark:text-slate-600 py-16 px-4 rounded-md" method="post">
+        <form action="/register/verify" class="min-w-[40rem] mx-auto bg-slate-800 text-white dark:bg-white dark:text-slate-600 py-16 px-4 rounded-md" method="post">
             <h1 class="text-center text-5xl font-semibold"><%= languages.find(language => language.ele === 'verify_title')['name'] %></h1>
             <div class="form__group">
                 <label for=""><%= languages.find(language => language.ele === 'verify_label')['name'] %></label>

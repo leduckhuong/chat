@@ -49,12 +49,11 @@ module.exports = async function errorHandler (err, req, res, next) {
                 console.log('Is errorHandle 500');
                 return res.send('Is errorHandle 500');            
             }
-
             return res.send('Error');
         } catch (error) {
             return res.status(500).send('Internal Server Error');
         }
     }
-
+    console.log(err);
     handler(err.status);
 }
